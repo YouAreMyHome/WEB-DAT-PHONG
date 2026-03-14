@@ -10,6 +10,10 @@ const bcrypt = require('bcryptjs');
 const auth = require('../../middleware/auth');
 const upload = require('../../middleware/upload');
 const cloudinary = require('cloudinary').v2;
+
+// Upload ảnh user vào StaynightSystem/user
+const uploadUser = upload('user');
+
 // Sử dụng cookie-parser
 router.use(cookieParser());
 
@@ -21,7 +25,7 @@ const getPublicIdFromUrl = (url) => {
 };
 
 // Cập nhật ảnh đại diện
-router.post('/upload-avatar', auth, upload.single('avatar'), async (req, res) => {
+router.post('/upload-avatar', auth, uploadUser.single('avatar'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ msg: 'Không có file nào được tải lên.' });
   }

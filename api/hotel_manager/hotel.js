@@ -8,6 +8,9 @@ const upload = require('../../middleware/upload');
 const cloudinary = require('cloudinary').v2;
 const bcrypt = require('bcrypt'); // Để kiểm tra mật khẩu nếu cần
 
+// Upload ảnh hotel vào StaynightSystem/hotel
+const uploadHotel = upload('hotel');
+
 // Hàm lấy publicId từ URL của Cloudinary
 const getPublicIdFromUrl = (url) => {
   const matches = url.match(/\/v\d+\/(.+)\.(jpg|jpeg|png|gif|webp)/);
@@ -16,7 +19,7 @@ const getPublicIdFromUrl = (url) => {
 
 // Route thêm khách sạn
 // Thêm khách sạn
-router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) => {
+router.post('/addhotel', auth, uploadHotel.array('imagehotel', 5), async (req, res) => {
   const { name, location, description, rooms, stars } = req.body;
   try {
     const managerId = req.userId; // Lấy userId
@@ -145,7 +148,7 @@ router.delete('/:hotelId', auth, async (req, res) => {
 });
 
 // Route cập nhật khách sạn
-router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) => {
+router.put('/:hotelId', auth, uploadHotel.array('imagehotel', 5), async (req, res) => {
   const { hotelId } = req.params;
   const { name, location, description, stars, removedImages = [] } = req.body;
 

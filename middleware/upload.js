@@ -3,16 +3,24 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary'); // Kiểm tra đường dẫn
 
-// Cấu hình lưu trữ trên Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'hotels', // Tên thư mục trong Cloudinary
-    allowed_formats: ['jpg', 'png', 'jpeg'],
-  },
-});
+/**
+ * Tạo multer upload middleware cho từng loại tài nguyên.
+ * Tất cả ảnh nằm trong thư mục mẹ StaynightSystem:
+ *   StaynightSystem/user   — avatar người dùng
+ *   StaynightSystem/hotel  — ảnh khách sạn
+ *   StaynightSystem/room   — ảnh phòng
+ *
+ * Dùng: const upload = require('./middleware/upload')('hotel');
+ */
+const createUpload = (subfolder) => {
+  const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: `StaynightSystem/${subfolder}`,
+      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    },
+  });
+  return multer({ storage });
+};
 
-const upload = multer({ storage: storage });
-
-
-module.exports = upload;
+module.exports = createUpload;
